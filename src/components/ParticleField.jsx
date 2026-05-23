@@ -16,7 +16,7 @@ export default function ParticleField() {
     resize()
     window.addEventListener('resize', resize)
 
-    const particles = Array.from({ length: 120 }, () => ({
+    const particles = Array.from({ length: 55 }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
       vx: (Math.random() - 0.5) * 0.3,
@@ -47,7 +47,7 @@ export default function ParticleField() {
           const dx = particles[i].x - particles[j].x
           const dy = particles[i].y - particles[j].y
           const dist = Math.sqrt(dx * dx + dy * dy)
-          if (dist < 120) {
+          if (dist < 90) {
             ctx.beginPath()
             ctx.moveTo(particles[i].x, particles[i].y)
             ctx.lineTo(particles[j].x, particles[j].y)

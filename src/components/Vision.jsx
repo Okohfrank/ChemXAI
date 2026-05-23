@@ -2,7 +2,7 @@
 
 export default function Vision() {
   return (
-    <section id="technology" className="relative py-24 px-6 bg-gradient-to-b from-[#081225] to-[#020617]">
+    <section id="technology" className="relative py-24 px-6 bg-gradient-to-b from-[#040c16] to-[#010509]">
       <div className="max-w-7xl mx-auto text-center">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.8 }}>
           <p className="text-sm text-cyan-400 uppercase tracking-[0.3em]">Our Vision</p>

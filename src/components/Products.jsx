@@ -8,7 +8,7 @@ const products = [
 
 export default function Products() {
   return (
-    <section id="products" className="relative py-24 px-6 bg-[#020617]">
+    <section id="products" className="relative py-24 px-6 bg-[#010509]">
       <div className="max-w-7xl mx-auto">
         <div className="mb-12 text-center">
           <p className="text-sm text-cyan-400 uppercase tracking-[0.3em]">Product Suite</p>
@@ -23,7 +23,7 @@ export default function Products() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.6 }}
-              className="rounded-3xl border border-cyan-400/10 bg-[#081225] p-8"
+              className="rounded-3xl border border-cyan-400/8 bg-[#060e1c] p-8"
             >
               <div className="text-cyan-400 text-sm font-semibold mb-3">{product.name}</div>
               <h3 className="text-2xl font-bold text-white">{product.name}</h3>

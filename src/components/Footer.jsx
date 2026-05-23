@@ -2,7 +2,7 @@
 
 export default function Footer() {
   return (
-    <footer id="contact" className="relative border-t border-cyan-400/10 py-16 px-6 bg-[#020617] text-white">
+    <footer id="contact" className="relative border-t border-cyan-400/8 py-16 px-6 bg-[#010509] text-white">
       <div className="max-w-7xl mx-auto flex flex-col items-center gap-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

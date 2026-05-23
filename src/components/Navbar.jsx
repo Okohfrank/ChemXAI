@@ -22,10 +22,10 @@ export default function Navbar() {
         scrolled ? 'py-3' : 'py-5'
       }`}
     >
-      <div className="glass mx-4 md:mx-8 lg:mx-16 rounded-2xl px-6 py-3 flex items-center justify-between">
+      <div className="mx-4 md:mx-8 lg:mx-16 rounded-2xl px-6 py-3 flex items-center justify-between" style={{ background: 'rgba(6,12,24,0.55)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.06)' }}>
 
         {/* Logo */}
-        <a href="#" className="font-bold text-xl tracking-tight">
+        <a href="#" className="font-bold text-xl tracking-tight select-none">
           <span className="text-white">Chem</span>
           <span className="text-cyan-400">XAI</span>
         </a>
@@ -48,8 +48,8 @@ export default function Navbar() {
           href="#contact"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.97 }}
-          className="hidden md:inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold bg-cyan-400 hover:bg-cyan-300 transition-all duration-300"
-          style={{ color: '#020617', boxShadow: '0 0 15px rgba(34,211,238,0.3)' }}
+          className="hidden md:inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-cyan-300 border border-cyan-400/40 transition-all duration-300 hover:bg-cyan-400/10"
+          style={{ backdropFilter: 'blur(8px)', background: 'rgba(34,211,238,0.06)', boxShadow: '0 0 18px rgba(34,211,238,0.15)' }}
         >
           Enter Future
         </motion.a>
@@ -80,7 +80,7 @@ export default function Navbar() {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.2 }}
-          className="glass mx-4 mt-2 rounded-2xl px-6 py-4 flex flex-col gap-4 md:hidden"
+          className="mx-4 mt-2 rounded-2xl px-6 py-4 flex flex-col gap-4 md:hidden" style={{ background: 'rgba(6,12,24,0.85)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.06)' }}
         >
           {links.map((l) => (
             <a
