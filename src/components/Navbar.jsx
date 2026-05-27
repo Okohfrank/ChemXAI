@@ -1,17 +1,43 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { useNavigate, useLocation } from 'react-router-dom'
 
-const links = ['Vision', 'Products', 'Technology', 'About', 'Contact']
+const links = ['Products', 'About', 'Vision', 'Technology', 'Contact']
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
+  const navigate = useNavigate()
+  const location = useLocation()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
     window.addEventListener('scroll', onScroll)
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  const handleNav = (e, section) => {
+    e.preventDefault()
+    setOpen(false)
+    const hash = '#' + section.toLowerCase()
+
+    if (location.pathname === '/') {
+      const el = document.querySelector(hash)
+      if (el) el.scrollIntoView({ behavior: 'smooth' })
+    } else {
+      navigate('/' + hash)
+    }
+  }
+
+  const handleLogo = (e) => {
+    e.preventDefault()
+    setOpen(false)
+    if (location.pathname === '/') {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    } else {
+      navigate('/')
+    }
+  }
 
   return (
     <motion.nav
@@ -25,9 +51,12 @@ export default function Navbar() {
       <div className="mx-4 md:mx-8 lg:mx-16 rounded-2xl px-6 py-3 flex items-center justify-between" style={{ background: 'rgba(6,12,24,0.55)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.06)' }}>
 
         {/* Logo */}
-        <a href="#" className="font-bold text-xl tracking-tight select-none">
-          <span className="text-white">Chem</span>
-          <span className="text-cyan-400">XAI</span>
+        <a href="/" onClick={handleLogo} className="flex items-center gap-2 select-none">
+          <img src="/ChemXAI.png" alt="ChemXAI" className="h-10 md:h-11" style={{ objectFit: 'contain' }} />
+          <span className="text-xl tracking-tight" style={{ fontFamily: "'Sora', sans-serif" }}>
+            <span style={{ color: '#fff', fontWeight: 300 }}>Chem</span>
+            <span style={{ color: '#22d3ee', fontWeight: 800 }}>XAI</span>
+          </span>
         </a>
 
         {/* Desktop links */}
@@ -36,6 +65,7 @@ export default function Navbar() {
             <a
               key={l}
               href={'#' + l.toLowerCase()}
+              onClick={(e) => handleNav(e, l)}
               className="text-slate-400 hover:text-cyan-400 text-sm font-medium transition-colors duration-300"
             >
               {l}
@@ -44,15 +74,14 @@ export default function Navbar() {
         </div>
 
         {/* CTA button */}
-        <motion.a
+        <a
           href="#contact"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.97 }}
-          className="hidden md:inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-cyan-300 border border-cyan-400/40 transition-all duration-300 hover:bg-cyan-400/10"
-          style={{ backdropFilter: 'blur(8px)', background: 'rgba(34,211,238,0.06)', boxShadow: '0 0 18px rgba(34,211,238,0.15)' }}
+          onClick={(e) => handleNav(e, 'Contact')}
+          className="hidden md:inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-cyan-300 border border-cyan-400/40 transition-all duration-300 hover:bg-cyan-400/10 active:scale-95"
+          style={{ backdropFilter: 'blur(8px)', background: 'rgba(34,211,238,0.06)' }}
         >
           Enter Future
-        </motion.a>
+        </a>
 
         {/* Mobile hamburger */}
         <button
@@ -61,7 +90,7 @@ export default function Navbar() {
         >
           <span
             className="block w-5 h-0.5 bg-cyan-400 transition-all duration-300"
-            style={{ transform: open ? 'rotate(45deg) translateY(8px)' : 'none' }}
+            style={{ transform: open ? 'translateY(8px) rotate(45deg)' : 'none' }}
           />
           <span
             className="block w-5 h-0.5 bg-cyan-400 transition-all duration-300"
@@ -69,7 +98,7 @@ export default function Navbar() {
           />
           <span
             className="block w-5 h-0.5 bg-cyan-400 transition-all duration-300"
-            style={{ transform: open ? 'rotate(-45deg) translateY(-8px)' : 'none' }}
+            style={{ transform: open ? 'translateY(-8px) rotate(-45deg)' : 'none' }}
           />
         </button>
       </div>
@@ -86,7 +115,7 @@ export default function Navbar() {
             <a
               key={l}
               href={'#' + l.toLowerCase()}
-              onClick={() => setOpen(false)}
+              onClick={(e) => handleNav(e, l)}
               className="text-slate-300 hover:text-cyan-400 text-sm font-medium transition-colors duration-300"
             >
               {l}
@@ -95,7 +124,7 @@ export default function Navbar() {
 
           <a
             href="#contact"
-            onClick={() => setOpen(false)}
+            onClick={(e) => handleNav(e, 'Contact')}
             className="text-center px-5 py-2.5 rounded-full text-sm font-semibold bg-cyan-400"
             style={{ color: '#020617' }}
           >

@@ -14,14 +14,16 @@ function HeroBg() {
     resize()
     const ro = new ResizeObserver(resize)
     ro.observe(canvas)
-    const COUNT = 38
+    const isMobile = canvas.width < 768
+    const COUNT = isMobile ? 14 : 38
+    const LINK_DIST = isMobile ? 90 : 130
     const nodes = Array.from({ length: COUNT }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
       vx: (Math.random() - 0.5) * 0.22,
       vy: (Math.random() - 0.5) * 0.22,
     }))
-    const FRAME_MS = 1000 / 30
+    const FRAME_MS = 1000 / (isMobile ? 24 : 30)
     let last = 0
     function draw(ts) {
       raf = requestAnimationFrame(draw)
@@ -34,23 +36,25 @@ function HeroBg() {
         if (n.x < 0) n.x = W; if (n.x > W) n.x = 0
         if (n.y < 0) n.y = H; if (n.y > H) n.y = 0
       })
-      for (let i = 0; i < nodes.length; i++) {
-        for (let j = i + 1; j < nodes.length; j++) {
-          const dx = nodes[i].x - nodes[j].x, dy = nodes[i].y - nodes[j].y
-          const d = Math.sqrt(dx * dx + dy * dy)
-          if (d < 130) {
-            ctx.beginPath()
-            ctx.moveTo(nodes[i].x, nodes[i].y)
-            ctx.lineTo(nodes[j].x, nodes[j].y)
-            ctx.strokeStyle = `rgba(34,211,238,${(0.07 * (1 - d / 130)).toFixed(3)})`
-            ctx.lineWidth = 0.5
-            ctx.stroke()
+      if (!isMobile) {
+        for (let i = 0; i < nodes.length; i++) {
+          for (let j = i + 1; j < nodes.length; j++) {
+            const dx = nodes[i].x - nodes[j].x, dy = nodes[i].y - nodes[j].y
+            const d = Math.sqrt(dx * dx + dy * dy)
+            if (d < LINK_DIST) {
+              ctx.beginPath()
+              ctx.moveTo(nodes[i].x, nodes[i].y)
+              ctx.lineTo(nodes[j].x, nodes[j].y)
+              ctx.strokeStyle = `rgba(34,211,238,${(0.07 * (1 - d / LINK_DIST)).toFixed(3)})`
+              ctx.lineWidth = 0.5
+              ctx.stroke()
+            }
           }
         }
       }
       nodes.forEach(n => {
         ctx.beginPath()
-        ctx.arc(n.x, n.y, 1.2, 0, Math.PI * 2)
+        ctx.arc(n.x, n.y, isMobile ? 1 : 1.2, 0, Math.PI * 2)
         ctx.fillStyle = 'rgba(56,189,248,0.28)'
         ctx.fill()
       })
@@ -110,12 +114,10 @@ function EngineeringLogo() {
 function ChemXAIMarqueeLogo() {
   return (
     <span className="flex items-center gap-1.5">
-      <svg width="12" height="14" viewBox="0 0 14 18" fill="#22d3ee">
-        <path d="M8 0L1 9h5L4 18l9-11H8L8 0z"/>
-      </svg>
-      <span style={{ fontWeight: 700, fontSize: 13 }}>
-        <span style={{ color: '#fff' }}>Chem</span>
-        <span style={{ color: '#22d3ee' }}>XAI</span>
+      <img src="/ChemXAI.png" alt="" width="22" height="22" style={{ objectFit: 'contain' }} />
+      <span style={{ fontSize: 13, fontFamily: "'Sora', sans-serif" }}>
+        <span style={{ color: '#fff', fontWeight: 300 }}>Chem</span>
+        <span style={{ color: '#22d3ee', fontWeight: 800 }}>XAI</span>
       </span>
     </span>
   )
@@ -136,7 +138,7 @@ const MARQUEE = [
 export default function Hero() {
   return (
     <section
-      id="vision"
+      id="hero"
       className="relative overflow-hidden"
       style={{
         height: '100vh',
