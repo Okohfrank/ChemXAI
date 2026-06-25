@@ -89,7 +89,7 @@ function LiveTicker({ items }) {
    Mobile: CSS shine on tap, tap scale
    All hover/glow/shine via CSS transitions, not framer-motion
 */
-function ProductCard({ product, delay, large, onPulseLaunch }) {
+function ProductCard({ product, delay, large, onLaunch }) {
   const cardRef = useRef(null)
   const rafRef = useRef(null)
   const [tilt, setTilt] = useState('')
@@ -191,8 +191,8 @@ function ProductCard({ product, delay, large, onPulseLaunch }) {
           </div>
 
           {product.href ? (
-            onPulseLaunch ? (
-              <button onClick={onPulseLaunch}
+            onLaunch ? (
+              <button onClick={onLaunch}
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold w-fit active:scale-95 cursor-pointer"
                 style={{ background: '#22d3ee', color: '#020617', transition: 'transform 0.15s', border: 'none' }}>
                 Launch {product.name}
@@ -391,11 +391,19 @@ const products = [
     icon: <svg width="26" height="26" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="16" stroke="rgba(34,211,238,0.2)" strokeWidth="1"/><path d="M8 20h6l3-8 4 16 3-10 3 2h5" stroke="#22d3ee" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg>,
   },
   {
+    name: 'SORTAI', tagline: 'Pneumatic Waste Sorting & CV System', sector: 'Industrial AI',
+    desc: 'AI-powered pneumatic waste sorting system. Utilizes real-time Computer Vision to estimate material density, mass, and moisture, executing precise air-jet pulses to sort materials in real-time.',
+    tags: ['Computer Vision', 'Pneumatic Sorting', 'Material Science', 'Simulation & Control'],
+    ticker: ['System Status — Connected — Monitoring', 'Sorting Accuracy — 94.6% — High', 'Air-Jet Pressure — 620 kPa — Optimal', 'Total Sorted — 12,854 units'],
+    status: 'Live', statusColor: '#34d399', href: 'https://sortai.netlify.app/', large: false,
+    icon: <svg width="26" height="26" viewBox="0 0 40 40" fill="none"><rect x="8" y="8" width="24" height="24" rx="4" stroke="rgba(34,211,238,0.25)" strokeWidth="1"/><path d="M14 14l4 4 4-4" stroke="rgba(34,211,238,0.4)" strokeWidth="1.2" strokeLinecap="round"/><path d="M14 20h12M14 26h12" stroke="#22d3ee" strokeWidth="1.2" strokeLinecap="round"/><circle cx="26" cy="14" r="2" fill="#22d3ee" /></svg>,
+  },
+  {
     name: 'ProjexAI', tagline: 'Academic Intelligence Ecosystem', sector: 'Academic AI',
     desc: 'AI ecosystem for final year engineering students and supervisors. Finds cheapest materials, builds budgets, tracks timelines, surfaces literature, and serves as an intelligent assistant from proposal to defence day.',
     tags: ['Material Sourcing', 'Budget AI', 'Timeline Tracker', 'Literature AI'],
     ticker: ['Projects Active — Monitoring Timelines', 'Material Prices — Scanning Markets', 'Literature — Indexing Sources'],
-    status: 'In Development', statusColor: '#eab308', href: null, large: false,
+    status: 'Launching July 6', statusColor: '#eab308', href: null, large: false,
     icon: <svg width="26" height="26" viewBox="0 0 40 40" fill="none"><rect x="7" y="9" width="26" height="22" rx="3" stroke="rgba(34,211,238,0.25)" strokeWidth="1"/><line x1="7" y1="16" x2="33" y2="16" stroke="rgba(34,211,238,0.15)" strokeWidth="0.8"/><path d="M12 22h8M12 27h12" stroke="#22d3ee" strokeWidth="1.2" strokeLinecap="round"/></svg>,
   },
   {
@@ -408,17 +416,17 @@ const products = [
   },
 ]
 
-/* ═══ PULSE LAUNCH OVERLAY ═══
+/* ═══ LAUNCH OVERLAY ═══
    Safari/Firefox block window.open inside setTimeout — the overlay is now
    purely visual feedback while the tab opens instantly on click.           */
-function PulseLaunchOverlay({ active, onComplete }) {
+function LaunchOverlay({ active, name = 'PULSE', onComplete }) {
   useEffect(() => {
     if (!active) return
     const timer = setTimeout(onComplete, 2200)
     return () => clearTimeout(timer)
   }, [active, onComplete])
 
-  const letters = 'PULSE'.split('')
+  const letters = name.split('')
 
   return (
     <AnimatePresence>
@@ -444,7 +452,7 @@ function PulseLaunchOverlay({ active, onComplete }) {
           />
 
           <div className="relative z-10 flex flex-col items-center gap-5 px-6 text-center">
-            {/* PULSE letters */}
+            {/* letters */}
             <div className="flex items-center gap-1 sm:gap-2 md:gap-4">
               {letters.map((letter, i) => (
                 <motion.span key={i}
@@ -499,17 +507,17 @@ function PulseLaunchOverlay({ active, onComplete }) {
 
 /* ═══ MAIN EXPORT ═══ */
 export default function Products() {
-  const [launchingPulse, setLaunchingPulse] = useState(false)
-  const handlePulseLaunch = useCallback(() => {
-    window.open('https://pulse-chemxai.netlify.app', '_blank')
-    setLaunchingPulse(true)
+  const [launchingProduct, setLaunchingProduct] = useState(null)
+  const handleLaunch = useCallback((name, href) => {
+    window.open(href, '_blank')
+    setLaunchingProduct(name)
   }, [])
 
   return (
     <section id="products" className="relative overflow-hidden"
       style={{ background: 'linear-gradient(180deg, rgba(3,7,18,0.92) 0%, rgba(10,22,40,0.92) 50%, rgba(3,7,18,0.92) 100%)' }}>
 
-      <PulseLaunchOverlay active={launchingPulse} onComplete={() => setLaunchingPulse(false)} />
+      <LaunchOverlay active={!!launchingProduct} name={launchingProduct || 'PULSE'} onComplete={() => setLaunchingProduct(null)} />
 
       {/* floating shapes — pure CSS, zero JS */}
       <div className="absolute pointer-events-none" style={{
@@ -545,7 +553,7 @@ export default function Products() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-24">
           {products.map((p, i) => (
             <ProductCard key={p.name} product={p} delay={i * 0.08} large={p.large}
-              onPulseLaunch={p.name === 'PULSE' ? handlePulseLaunch : undefined} />
+              onLaunch={p.href ? () => handleLaunch(p.name, p.href) : undefined} />
           ))}
         </div>
 

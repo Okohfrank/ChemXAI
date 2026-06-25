@@ -26,10 +26,21 @@ const products = [
     dataAngle: 'Collects anonymized energy consumption patterns from Nigerian hospitals — NEPA outage frequency, generator runtime, fuel burn rates — providing the first structured dataset of hospital energy management in West Africa.',
   },
   {
+    name: 'SORTAI',
+    tagline: 'Pneumatic Waste Sorting & Computer Vision System',
+    sector: 'Industrial AI',
+    status: 'Live',
+    statusColor: '#34d399',
+    href: 'https://sortai.netlify.app/',
+    desc: 'AI-powered pneumatic waste sorting system. Combines real-time computer vision and pneumatic air-jet controls to analyze and sort materials based on density, mass, moisture, and size.',
+    features: ['Computer Vision analysis', 'Density & moisture estimation', 'Pneumatic air-jet control', 'Real-time simulation', 'Advanced statistics logging'],
+    dataAngle: 'Gathers real-time telemetry on sorted material characteristics — mass distribution, density variances, and moisture content of municipal solid waste — building a comprehensive dataset to optimize municipal recycling programs in developing regions.',
+  },
+  {
     name: 'ProjexAI',
     tagline: 'Academic Intelligence Ecosystem',
     sector: 'Academic AI',
-    status: 'In Development',
+    status: 'Launching July 6',
     statusColor: '#eab308',
     href: null,
     desc: 'AI ecosystem for final year engineering students and supervisors. Finds cheapest materials, builds budgets, tracks timelines, surfaces literature, and serves as an intelligent assistant from proposal to defence day.',
@@ -90,6 +101,12 @@ const dataSectors = [
     product: 'PULSE',
   },
   {
+    icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" strokeWidth="1.5" strokeLinecap="round"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2M10 11v6M14 11v6"/></svg>,
+    title: 'Industrial Waste Composition Data',
+    desc: 'SORTAI collects physical telemetry on municipal waste characteristics (density, mass, moisture) during automated pneumatic sorting — generating key datasets to design optimal recycling infrastructure in Africa.',
+    product: 'SORTAI',
+  },
+  {
     icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" strokeWidth="1.5" strokeLinecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>,
     title: 'Sickle Cell Biometrics',
     desc: 'With patient consent, the Sickle Cell Smart Watch gathers continuous biometric readings — SpO2, heart rate, temperature, pain markers — giving researchers the data to accelerate cure development.',
@@ -103,15 +120,15 @@ const dataSectors = [
   },
 ]
 
-/* ═══ PULSE LAUNCH OVERLAY ═══ */
-function PulseLaunchOverlay({ active, onComplete }) {
+/* ═══ LAUNCH OVERLAY ═══ */
+function LaunchOverlay({ active, name = 'PULSE', onComplete }) {
   useEffect(() => {
     if (!active) return
     const timer = setTimeout(onComplete, 2200)
     return () => clearTimeout(timer)
   }, [active, onComplete])
 
-  const letters = 'PULSE'.split('')
+  const letters = name.split('')
 
   return (
     <AnimatePresence>
@@ -184,7 +201,7 @@ function PulseLaunchOverlay({ active, onComplete }) {
 }
 
 /* ═══ PRODUCT DETAIL CARD ═══ */
-function ProductDetail({ product, index, onPulseLaunch }) {
+function ProductDetail({ product, index, onLaunch }) {
   const ref = useRef(null)
   const inView = useInView(ref, { once: false, amount: 0.2 })
   const [expanded, setExpanded] = useState(false)
@@ -259,9 +276,9 @@ function ProductDetail({ product, index, onPulseLaunch }) {
         </AnimatePresence>
 
         {product.href && (
-          product.name === 'PULSE' && onPulseLaunch ? (
+          onLaunch ? (
             <button
-              onClick={onPulseLaunch}
+              onClick={() => onLaunch(product.name, product.href)}
               className="inline-flex items-center gap-2 mt-3 px-5 py-2.5 md:px-6 md:py-3 rounded-full text-xs md:text-sm font-semibold active:scale-95 cursor-pointer"
               style={{ background: '#22d3ee', color: '#020617', transition: 'transform 0.15s', border: 'none' }}
             >
@@ -305,7 +322,7 @@ function NoResults({ query }) {
 export default function ProductsPage() {
   const [activeTab, setActiveTab] = useState('products')
   const [searchQuery, setSearchQuery] = useState('')
-  const [launchingPulse, setLaunchingPulse] = useState(false)
+  const [launchingProduct, setLaunchingProduct] = useState(null)
 
   useEffect(() => { window.scrollTo(0, 0) }, [])
 
@@ -321,16 +338,16 @@ export default function ProductsPage() {
     ? dataSectors.filter(s => [s.title, s.desc, s.product].some(str => str.toLowerCase().includes(q)))
     : dataSectors
 
-  const handlePulseLaunch = useCallback(() => {
-    window.open('https://pulse-chemxai.netlify.app', '_blank')
-    setLaunchingPulse(true)
+  const handleLaunch = useCallback((name, href) => {
+    window.open(href, '_blank')
+    setLaunchingProduct(name)
   }, [])
 
   return (
     <div className="min-h-screen" style={{ background: 'rgba(3,7,18,0.92)' }}>
 
-      {/* PULSE Launch Animation */}
-      <PulseLaunchOverlay active={launchingPulse} onComplete={() => setLaunchingPulse(false)} />
+      {/* Launch Animation Overlay */}
+      <LaunchOverlay active={!!launchingProduct} name={launchingProduct || 'PULSE'} onComplete={() => setLaunchingProduct(null)} />
 
       {/* Header */}
       <div className="pt-24 md:pt-32 pb-8 md:pb-12 px-5 md:px-6">
@@ -440,7 +457,7 @@ export default function ProductsPage() {
                 {filteredProducts.length > 0 ? (
                   <div className="flex flex-col gap-4 md:gap-6">
                     {filteredProducts.map((p, i) => (
-                      <ProductDetail key={p.name} product={p} index={i} onPulseLaunch={handlePulseLaunch} />
+                      <ProductDetail key={p.name} product={p} index={i} onLaunch={handleLaunch} />
                     ))}
                   </div>
                 ) : (
